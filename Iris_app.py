@@ -26,3 +26,28 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.33, rand
 svc_model = SVC(kernel = 'linear')
 svc_model.fit(X_train, y_train)
 score = svc_model.score(X_train, y_train)
+@st.cache()
+def prediction(sepal_length, sepal_width, petal_length, petal_width):
+  species = svc_model.predict([[sepal_length, sepal_width, petal_length, petal_width]])
+  species = species[0]
+  if species == 0:
+    return "Iris-setosa"
+  elif species == 1:
+    return "Iris-virginica"
+  else:
+    return "Iris-versicolor"
+st.title("Iris Flower Species Prediction App")  
+
+# Add 4 sliders and store the value returned by them in 4 separate variables.
+s_len = st.slider("Sepal Length", 0.0, 10.0)
+s_wid = st.slider("Sepal Width", 0.0, 10.0)
+p_len = st.slider("Petal Length", 0.0, 10.0)
+p_wid = st.slider("Petal Width", 0.0, 10.0)
+
+# When 'Predict' button is pushed, the 'prediction()' function must be called 
+# and the value returned by it must be stored in a variable, say 'species_type'. 
+# Print the values of 'species_type' and 'score' variables using the 'st.text()' function.
+if st.button("Predict"):
+	species_type = prediction(s_len, s_wid, p_len, p_wid)
+	st.write("Species predicted:", species_type)
+	st.write("Accuracy score of this model is:", score)
